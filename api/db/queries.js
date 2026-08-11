@@ -46,10 +46,29 @@ async function getAllPublished(req, res){
     return posts;
 };
 
-async function getSpecificPost(postID){
-    return await prisma.post.findUnique({
-        where: { id: Number(postID)}
-    });
+async function getSpecificPost(postID) {
+  return prisma.post.findUnique({
+    where: {
+      id: Number(postID),
+    },
+    include: {
+      comments: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+            },
+          },
+        },
+        orderBy: {
+          date: "asc",
+        },
+      },
+    },
+  });
 }
 
 async function createPost(authorID, title, body){
@@ -76,6 +95,26 @@ async function updatedPostStatus(postID){
     })
 }
 
+async function createComment(text, userID, postID) {
+  return prisma.comment.create({
+    data: {
+      text,
+      date: new Date(),
+      userID,
+      postID,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          first_name: true,
+          last_name: true,
+        },
+      },
+    },
+  });
+}
+
 async function deleteComment(commendID){
      return await prisma.comment.delete({
         where: { id: Number(id) },
@@ -89,5 +128,6 @@ module.exports = {
     createPost,
     getAllPublished,
     getSpecificPost,
+    createComment,
     deleteComment
 }   

@@ -28,8 +28,6 @@ function Login() {
       });
 
       const data = await response.json();
-      console.log("Login status:", response.status);
-console.log("Login response:", data);
 
       if (!response.ok) {
         throw new Error(
