@@ -16,7 +16,7 @@ async function getPublishedPosts(req, res){
 }
 
 async function getSpecificPost(req, res){
-    const postID = req.body.postID;
+    const postID = req.params.postID;
     res.json(await db.getSpecificPost(postID));
 }
 

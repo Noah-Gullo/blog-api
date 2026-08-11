@@ -1,23 +1,31 @@
 const passport = require("passport");
 const prisma = require("./prisma");
 
-async function createUser(first_name, last_name, username, password){
+async function createUser(first_name, last_name, email, password){
     return await prisma.user.create({
         data: {
-            username: username,
+            first_name: first_name,
+            last_name: last_name,
+            email: email,
             password: password
         }
     })
 }
 
-async function getUser(id){
-    return await prisma.user.findUnique({
-        where: {id: Number(id)},
-        select: {
-            username: true,
-            password: true,
-        }
-    })
+async function getUserByEmail(email) {
+  return prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+  });
+}
+
+async function getUserById(id) {
+  return prisma.user.findUnique({
+    where: {
+      id: Number(id),
+    },
+  });
 }
 
 async function createPost(title, text, userID){
@@ -76,7 +84,8 @@ async function deleteComment(commendID){
 
 module.exports = {
     createUser,
-    getUser,
+    getUserByEmail,
+    getUserById,
     createPost,
     getAllPublished,
     getSpecificPost,

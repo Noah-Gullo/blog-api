@@ -1,13 +1,24 @@
+const db = require("../db/queries.js");
 const { body } = require("express-validator");
 
 const validateSignup = [
-    body("username")
+    body("first_name")
         .trim()
         .notEmpty()
-        .isAlphanumeric().withMessage("Must be alphanumeric")
-        .isLength({min: 3, max: 30}).withMessage("Must be at least 3 and no greater than 30")
+        .withMessage("First name is required"),
+
+    body("last_name")
+        .trim()
+        .notEmpty()
+        .withMessage("Last name is required"),
+        
+    body("email")
+        .trim()
+        .notEmpty()
+        .isEmail().withMessage("Username must be an email")
+        .isLength({min: 3, max: 30}).withMessage("Username/email must be at least 3 and no greater than 30")
         .custom(async (value) => {
-            const user = await db.getUser({username: value});
+            const user = await db.getUserByEmail(value);
             if (user) throw new Error("Username already exists");
         }),
 
