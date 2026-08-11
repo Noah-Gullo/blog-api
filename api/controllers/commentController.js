@@ -3,7 +3,7 @@ const db = require("../db/queries.js");
 const { prisma } = require("../lib/prisma.js"); 
 const { body, validationResult, matchedData } = require("express-validator");
 
-async function createComment(req, res, text){
+async function createComment(req, res){
     if(!req.user){
         return res.status(401).json({error: "You must be logged in to post a comment"});
     }
@@ -19,8 +19,13 @@ async function createComment(req, res, text){
     res.status(201).json(post);
 }
 
-async function deleteComment(req, res, commentID){
+async function deleteComment(req, res){
+    if(!req.user){
+        return res.status(401).json({ error: "You must be logged in to delete a comment"})
+    }
 
+    const { commentID } = req.params;
+    await db.deleteComment(commentID);
 }
 
 module.exports = {

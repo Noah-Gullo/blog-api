@@ -64,10 +64,17 @@ async function updatedPostStatus(postID){
     })
 }
 
+async function deleteComment(commendID){
+     return await prisma.comment.delete({
+        where: { id: Number(id) },
+    });
+}
+
 module.exports = {
     createUser,
     getUser,
     createPost,
     getAllPublished,
-    getSpecificPost
+    getSpecificPost,
+    deleteComment
 }   
