@@ -2,12 +2,8 @@ const db = require("../db/queries.js");
 const { prisma } = require("../lib/prisma.js"); 
 const passport = require('passport');
 const bcrypt = require("bcrypt");
-const { validationResult } = require("express-validator");
+const { body, validationResult, matchedData } = require("express-validator");
 const jwt = require("jsonwebtokne");
-
-const validateUser = [
-
-]
 
 async function login(req, res, next){
     passport.authenticate("local", {
@@ -23,7 +19,9 @@ async function login(req, res, next){
 }
 
 async function getUser(req, res){
-
+    const { id } = req.user;
+    const user = await db.getUser(id,);
+    res.json(user);
 }
 
 async function signup(req, res, next){
