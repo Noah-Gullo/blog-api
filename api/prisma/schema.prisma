@@ -36,12 +36,12 @@ model Comment {
 } 
 
 model Post {
-  id        Int @id @default(autoincrement())
-  title     String
-  body      String
-  date      DateTime
-  author    Author  @relation(fields: [authorID], references: [id])
-  authorID  Int
-  comments  Comment[]
+  id          Int @id @default(autoincrement())
+  title       String
+  body        String
+  isPublished Boolean
+  author      Author  @relation(fields: [authorID], references: [id])
+  authorID    Int
+  comments    Comment[]
 }
 
