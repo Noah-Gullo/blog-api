@@ -3,7 +3,7 @@ const { prisma } = require("../lib/prisma.js");
 const passport = require('passport');
 const bcrypt = require("bcrypt");
 const { body, validationResult, matchedData } = require("express-validator");
-const jwt = require("jsonwebtokne");
+const jwt = require("jsonwebtoken");
 
 async function login(req, res, next){
     passport.authenticate("local", {

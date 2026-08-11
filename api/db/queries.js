@@ -30,9 +30,13 @@ async function createPost(title, text, userID){
     })
 }
 
-async function getAllPublished(){
-    return await prisma.post.findMany();
-}
+async function getAllPublished(req, res){
+    const posts = await prisma.post.findMany({
+        where: { isPublished: true }
+    });
+
+    return posts;
+};
 
 async function getSpecificPost(postID){
     return await prisma.post.findUnique({

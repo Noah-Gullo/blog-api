@@ -1,9 +1,18 @@
 const db = require("../db/queries.js");
 const { prisma } = require("../lib/prisma.js"); 
+const { body, validationResult, matchedData } = require("express-validator");
 
 async function getPublishedPosts(req, res){
-    const posts = await db.getAllPublished();
-    return res.json(posts);
+    try{
+        const posts = await db.getAllPublished();
+        return res.json(posts);
+    } catch (error) {
+        console.log(error);
+    return res.status(500).json({ 
+      error: "Internal Server Error", 
+      message: error.message 
+    });
+  }
 }
 
 async function getSpecificPost(req, res){
@@ -12,7 +21,7 @@ async function getSpecificPost(req, res){
 }
 
 async function createPost(req, res){
-    const { authorID, title, body};
+    const { authorID, title, body} = matchData(req);
     await db.createPost(authorID, title, body);
 }
 
