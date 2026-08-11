@@ -1,3 +1,5 @@
+const { body } = require("express-validator");
+
 const validateSignup = [
     body("username")
         .trim()
@@ -23,7 +25,7 @@ const validateSignup = [
 const validateComment = [
     body("text")
         .trim()
-        .length({ min: 1, max: 1000}).withMessage("Comment must be at least between 1 and 1000 characters")
+        .isLength({ min: 1, max: 1000}).withMessage("Comment must be at least between 1 and 1000 characters")
 ]
 
 module.exports = {

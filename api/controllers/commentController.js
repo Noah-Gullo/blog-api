@@ -1,3 +1,4 @@
+const { json } = require("express");
 const db = require("../db/queries.js");
 const { prisma } = require("../lib/prisma.js"); 
 const { body, validationResult, matchedData } = require("express-validator");
@@ -24,5 +25,4 @@ async function deleteComment(req, res, commentID){
 
 module.exports = {
     createComment,
-    deleteComment
 }

@@ -30,6 +30,44 @@ async function createPost(title, text, userID){
     })
 }
 
+async function getAllPublished(){
+    return await prisma.post.findMany();
+}
+
+async function getSpecificPost(postID){
+    return await prisma.post.findUnique({
+        where: { id: Number(postID)}
+    });
+}
+
+async function createPost(authorID, title, body){
+    return await prisma.post.create({
+        data: {
+            title: title,
+            body: body,
+            authorID: Number(authorID),
+            isPublished: false
+        }
+    })
+}
+
+async function updatedPostStatus(postID){
+    const currStatus = await prisma.findUnique({
+        where: { id: Number(postID)},
+        select: {
+            isPublished
+        }
+    })
+    return await prisma.post.update({
+        where: { id: Number(postID)},
+        data: {isPublished: !currStatus}
+    })
+}
+
 module.exports = {
-    createUser
+    createUser,
+    getUser,
+    createPost,
+    getAllPublished,
+    getSpecificPost
 }   
