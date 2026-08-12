@@ -20,6 +20,17 @@ async function getSpecificPost(req, res){
     res.json(await db.getSpecificPost(postID));
 }
 
+async function getAllPosts(req, res, next) {
+  try {
+    const posts = await db.getAllPosts();
+
+    return res.json(posts);
+  } catch (error) {
+    console.error("getAllPosts error:", error);
+    next(error);
+  }
+}
+
 async function createPost(req, res){
     const { authorID, title, body} = matchData(req);
     await db.createPost(authorID, title, body);
@@ -35,6 +46,7 @@ async function updatePostStatus(req, res){
 module.exports = {
     getPublishedPosts,
     getSpecificPost,
+    getAllPosts,
     createPost,
     updatePostStatus,
 }

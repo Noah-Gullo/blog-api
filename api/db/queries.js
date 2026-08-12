@@ -95,6 +95,14 @@ async function updatedPostStatus(postID){
     })
 }
 
+async function getAllPosts() {
+  return prisma.post.findMany({
+    orderBy: {
+      id: "desc",
+    },
+  });
+}
+
 async function createComment(text, userID, postID) {
   return prisma.comment.create({
     data: {
@@ -128,6 +136,7 @@ module.exports = {
     createPost,
     getAllPublished,
     getSpecificPost,
+    getAllPosts,
     createComment,
     deleteComment
 }   
