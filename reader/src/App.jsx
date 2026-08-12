@@ -35,25 +35,14 @@ function App() {
       <Navbar user={user} setUser={setUser} />
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/posts/new" element={<NewPost />} />
 
-        <Route
-          path="/posts/:postID"
-          element={<PostPage user={user} />}
-        />
-
-        <Route
-          path="/login"
-          element={<Login onLogin={setUser} />}
-        />
-
-        <Route
-          path="/signup"
-          element={<Signup onSignup={setUser} />}
-        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </>
-  );
+  )
 }
 
 export default App;

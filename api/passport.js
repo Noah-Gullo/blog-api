@@ -1,6 +1,14 @@
 const passport = require("passport");
-const { Strategy: LocalStrategy } = require("passport-local");
-const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
+
+const {
+  Strategy: LocalStrategy,
+} = require("passport-local");
+
+const {
+  Strategy: JwtStrategy,
+  ExtractJwt,
+} = require("passport-jwt");
+
 const { compare } = require("bcryptjs");
 
 const db = require("./db/queries.js");
@@ -21,7 +29,10 @@ passport.use(
           });
         }
 
-        const match = await compare(password, user.password);
+        const match = await compare(
+          password,
+          user.password
+        );
 
         if (!match) {
           return done(null, false, {
@@ -30,32 +41,77 @@ passport.use(
         }
 
         return done(null, user);
-      } catch (err) {
-        return done(err);
+      } catch (error) {
+        return done(error);
       }
     }
   )
 );
 
-const opts = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.SESSION_SECRET,
-};
+passport.use(
+  "jwt",
+  new JwtStrategy(
+    {
+      jwtFromRequest:
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
+
+      secretOrKey:
+        process.env.SESSION_SECRET,
+    },
+
+    async (payload, done) => {
+      try {
+        if (!payload.user) {
+          return done(null, false);
+        }
+
+        const user = await db.getUserById(
+          payload.user.id
+        );
+
+        if (!user) {
+          return done(null, false);
+        }
+
+        return done(null, user);
+      } catch (error) {
+        return done(error, false);
+      }
+    }
+  )
+);
 
 passport.use(
-  new JwtStrategy(opts, async (jwt_payload, done) => {
-    try {
-      const user = await db.getUserById(jwt_payload.user.id);
+  "author-jwt",
+  new JwtStrategy(
+    {
+      jwtFromRequest:
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
 
-      if (!user) {
-        return done(null, false);
+      secretOrKey:
+        process.env.SESSION_SECRET,
+    },
+
+    async (payload, done) => {
+      try {
+        if (!payload.author) {
+          return done(null, false);
+        }
+
+        const author = await db.getAuthorById(
+          payload.author.id
+        );
+
+        if (!author) {
+          return done(null, false);
+        }
+
+        return done(null, author);
+      } catch (error) {
+        return done(error, false);
       }
-
-      return done(null, user);
-    } catch (err) {
-      return done(err, false);
     }
-  })
+  )
 );
 
 module.exports = passport;

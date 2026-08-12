@@ -28,14 +28,15 @@ async function getUserById(id) {
   });
 }
 
-async function createPost(title, text, userID){
-    return await prisma.user.create({
-        data: {
-            title: title,
-            body: text,
-            authorID: userID
-        }
-    })
+async function createPost(authorID, title, body) {
+  return prisma.post.create({
+    data: {
+      title,
+      body,
+      authorID: Number(authorID),
+      isPublished: false,
+    },
+  });
 }
 
 async function getAllPublished(req, res){
@@ -82,17 +83,25 @@ async function createPost(authorID, title, body){
     })
 }
 
-async function updatedPostStatus(postID){
-    const currStatus = await prisma.findUnique({
-        where: { id: Number(postID)},
-        select: {
-            isPublished
-        }
-    })
-    return await prisma.post.update({
-        where: { id: Number(postID)},
-        data: {isPublished: !currStatus}
-    })
+async function updatePostStatus(postID) {
+  const post = await prisma.post.findUnique({
+    where: {
+      id: Number(postID),
+    },
+  });
+
+  if (!post) {
+    throw new Error("Post not found");
+  }
+
+  return prisma.post.update({
+    where: {
+      id: Number(postID),
+    },
+    data: {
+      isPublished: !post.isPublished,
+    },
+  });
 }
 
 async function getAllPosts() {
@@ -129,6 +138,33 @@ async function deleteComment(commendID){
     });
 }
 
+async function createAuthor(first_name, last_name, email, password) {
+  return prisma.author.create({
+    data: {
+      first_name,
+      last_name,
+      email,
+      password,
+    },
+  });
+}
+
+async function getAuthorByEmail(email) {
+  return prisma.author.findUnique({
+    where: {
+      email,
+    },
+  });
+}
+
+async function getAuthorById(id) {
+  return prisma.author.findUnique({
+    where: {
+      id: Number(id),
+    },
+  });
+}
+
 module.exports = {
     createUser,
     getUserByEmail,
@@ -138,5 +174,8 @@ module.exports = {
     getSpecificPost,
     getAllPosts,
     createComment,
-    deleteComment
+    deleteComment,
+    createAuthor,
+    getAuthorByEmail,
+    getAuthorById
 }   

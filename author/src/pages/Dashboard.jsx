@@ -8,7 +8,7 @@ function Dashboard() {
   useEffect(() => {
     async function fetchPosts() {
       const token = localStorage.getItem("token");
-
+      
       const response = await fetch("http://localhost:3000/admin/posts", {
         headers: {
           Authorization: `Bearer ${token}`,
