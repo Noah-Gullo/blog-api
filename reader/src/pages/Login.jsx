@@ -16,7 +16,8 @@ function Login({ onLogin }) {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/login`,
+      {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +26,8 @@ function Login({ onLogin }) {
           email,
           password,
         }),
-      });
+      }
+    );
 
       const data = await response.json();
 

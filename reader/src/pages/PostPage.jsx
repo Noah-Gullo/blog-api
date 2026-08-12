@@ -25,7 +25,7 @@ function PostPage() {
     async function fetchPost() {
       try {
         const response = await fetch(
-          `http://localhost:3000/posts/${postID}`
+          `${import.meta.env.VITE_API_URL}/posts/${postID}`
         );
 
         if (!response.ok) {

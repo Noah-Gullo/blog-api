@@ -14,11 +14,14 @@ export async function checkLogin() {
   }
 
   try {
-    const response = await fetch("http://localhost:3000/user", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/user`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     if (!response.ok) {
       localStorage.removeItem("token");

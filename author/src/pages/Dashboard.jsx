@@ -34,7 +34,7 @@ function Dashboard() {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/posts/${postID}/publish`,
+        ``${import.meta.env.VITE_API_URL}/posts/${postID}``,
         {
           method: "PATCH",
           headers: {

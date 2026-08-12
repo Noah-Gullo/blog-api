@@ -9,7 +9,9 @@ function Home() {
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const response = await fetch("http://localhost:3000/");
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/`
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
