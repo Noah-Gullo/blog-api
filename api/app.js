@@ -26,6 +26,9 @@ const corsOptions = {
   credentials: true,
 };
 
+console.log("CLIENT_FRONTEND_URL:", process.env.CLIENT_FRONTEND_URL);
+console.log("allowedOrigins:", allowedOrigins);
+
 app.use(cors(corsOptions));
 
 app.use(express.json());
