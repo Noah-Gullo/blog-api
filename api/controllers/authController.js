@@ -1,14 +1,29 @@
 const db = require("../db/queries.js");
-const { prisma } = require("../lib/prisma.js"); 
-const passport = require('passport');
+const passport = require("passport");
 const bcrypt = require("bcrypt");
-const { body, validationResult, matchedData } = require("express-validator");
+const { validationResult, matchedData } = require("express-validator");
 const jwt = require("jsonwebtoken");
+
+function createToken(user) {
+  return jwt.sign(
+    {
+      user: {
+        id: user.id,
+        email: user.email,
+      },
+    },
+    process.env.SESSION_SECRET,
+    {
+      expiresIn: "1h",
+    }
+  );
+}
 
 function login(req, res, next) {
   passport.authenticate(
     "local",
     { session: false },
+    
     (error, user, info) => {
       if (error) {
         return next(error);
@@ -20,51 +35,75 @@ function login(req, res, next) {
         });
       }
 
-      const token = jwt.sign(
-        {
-          user: {
-            id: user.id,
-            username: user.username,
-          },
-        },
-        process.env.SESSION_SECRET,
-        {
-          expiresIn: "1h",
-        }
-      );
+      const token = createToken(user);
 
       return res.json({
         token,
         user: {
           id: user.id,
-          username: user.username,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
         },
       });
     }
   )(req, res, next);
 }
 
-async function signup(req, res, next){
-    if(req.user){
-        return res.status(403).json({errors: "You must log out if you want to sign up."});
-    }
+async function signup(req, res, next) {
+  try {
     const errors = validationResult(req);
-    if(!errors.isEmpty()){
-        return res.status(400).json({errors: errors.array()});
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array(),
+      });
     }
 
-    const {first_name, last_name, email, password} = matchedData(req);
+    const {
+      first_name,
+      last_name,
+      email,
+      password,
+    } = matchedData(req);
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await db.createUser(first_name, last_name, email, hashedPassword);
-    res.status(201).json({
-      id: user.id,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
+
+    const user = await db.createUser(
+      first_name,
+      last_name,
+      email,
+      hashedPassword
+    );
+
+    const token = createToken(user);
+
+    return res.status(201).json({
+      token,
+      user: {
+        id: user.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+      },
     });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getUser(req, res) {
+  return res.json({
+    id: req.user.id,
+    first_name: req.user.first_name,
+    last_name: req.user.last_name,
+    email: req.user.email,
+  });
 }
 
 module.exports = {
-    login,
-    signup
-}
+  createToken,
+  login,
+  signup,
+  getUser
+};

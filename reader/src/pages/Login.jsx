@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-function Login() {
+function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -37,10 +37,15 @@ function Login() {
         );
       }
 
-      // Store JWT returned by Express
+      // Store JWT in localStorage
       localStorage.setItem("token", data.token);
 
-      // Go back to home page
+      // Update the user state stored in App.jsx
+      if (onLogin) {
+        onLogin(data.user);
+      }
+
+      // Redirect to home page
       navigate("/");
     } catch (error) {
       console.error("Login error:", error);
