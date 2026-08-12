@@ -36,10 +36,17 @@ async function createPost(req, res){
     await db.createPost(authorID, title, body);
 }
 
-async function updatePostStatus(req, res){
-    const { id } = req.params;
-    const updatedPost = await db.updatePostStatus(id);
-    return res.json(updatePostStatus);
+async function updatePostStatus(req, res, next) {
+  try {
+    const postID = Number(req.params.postID);
+
+    const updatedPost = await db.updatePostStatus(postID);
+
+    return res.json(updatedPost);
+  } catch (error) {
+    console.error("updatePostStatus error:", error);
+    next(error);
+  }
 }
 
 

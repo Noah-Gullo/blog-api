@@ -121,8 +121,6 @@ async function getUser(req, res) {
 
 async function authorSignup(req, res, next) {
   try {
-        console.log("authorSignup hit");
-    console.log("body:", req.body);
     const {
       first_name,
       last_name,

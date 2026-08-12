@@ -1,14 +1,11 @@
-import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Dashboard from "./pages/Dashboard";
-import NewPost from "./pages/NewPost";
-import Signup from "./pages/Signup"
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import NewPost from "./pages/NewPost";
 
 function App() {
-  const [user, setUser] = useState(null);
-
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />

@@ -98,10 +98,8 @@ passport.use(
           return done(null, false);
         }
 
-        const author = await db.getAuthorById(
-          payload.author.id
-        );
-
+        const author = await db.getAuthorById(payload.author.id);
+        
         if (!author) {
           return done(null, false);
         }

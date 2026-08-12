@@ -50,7 +50,6 @@ function Signup() {
       }
 
       localStorage.setItem("token", data.token);
-
       navigate("/");
     } catch (error) {
       console.error("Author signup error:", error);

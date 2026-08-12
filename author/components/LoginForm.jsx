@@ -13,7 +13,7 @@ function LoginForm({ onLogin }) {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch("http://localhost:3000/author/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,7 +34,6 @@ function LoginForm({ onLogin }) {
         );
       }
 
-      // This localStorage belongs to the author app
       localStorage.setItem("token", data.token);
 
       if (onLogin) {

@@ -173,6 +173,7 @@ module.exports = {
     getAllPublished,
     getSpecificPost,
     getAllPosts,
+    updatePostStatus,
     createComment,
     deleteComment,
     createAuthor,

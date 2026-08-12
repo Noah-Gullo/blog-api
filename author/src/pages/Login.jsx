@@ -16,16 +16,19 @@ function Login({ onLogin }) {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:3000/author/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -40,13 +43,12 @@ function Login({ onLogin }) {
       localStorage.setItem("token", data.token);
 
       if (onLogin) {
-        onLogin(data.user);
+        onLogin(data.author);
       }
 
-      // Redirect to home page
       navigate("/");
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Author login error:", error);
       setError(error.message);
     } finally {
       setLoading(false);
@@ -55,7 +57,7 @@ function Login({ onLogin }) {
 
   return (
     <main>
-      <h1>Login</h1>
+      <h1>Author Login</h1>
 
       <form onSubmit={handleSubmit}>
         <div>
@@ -84,11 +86,7 @@ function Login({ onLogin }) {
           />
         </div>
 
-        {error && (
-          <p role="alert">
-            {error}
-          </p>
-        )}
+        {error && <p role="alert">{error}</p>}
 
         <button type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
@@ -96,7 +94,7 @@ function Login({ onLogin }) {
       </form>
 
       <p>
-        Don't have an account?{" "}
+        Don't have an author account?{" "}
         <Link to="/signup">Sign up</Link>
       </p>
     </main>
