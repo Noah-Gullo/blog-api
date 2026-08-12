@@ -1,4 +1,4 @@
-require("dotenv").config(); 
+require("dotenv").config();
 
 const express = require("express");
 const passport = require("./passport.js");
@@ -8,15 +8,26 @@ const indexRouter = require("./routes/indexRouter.js");
 
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  process.env.CLIENT_FRONTEND_URL,
+  process.env.ADMIN_FRONTEND_URL,
+].filter(Boolean);
+
 const corsOptions = {
-    origin: [
-        process.env.CLIENT_FRONTEND_URL,
-        process.env.ADMIN_FRONTEND_URL,
-    ].filter(Boolean),
-    credentials: true
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`Not allowed by CORS: ${origin}`));
+  },
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
